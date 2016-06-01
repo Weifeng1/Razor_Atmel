@@ -87,7 +87,16 @@ Promises:
   - 
 */
 void UserAppInitialize(void)
-{  
+{
+  LedOff(WHITE);
+  LedOff(PURPLE);
+  LedOff(BLUE);
+  LedOff(CYAN);
+  LedOff(GREEN);
+  LedOff(YELLOW);
+  LedOff(ORANGE);
+  LedOff(RED);
+
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -136,119 +145,69 @@ State Machine Function Definitions
 /* Wait for a message to be queued */
 static void UserAppSM_Idle(void)
 {
-  static u8 u8ColorIndex = 0;
-  static u16 u16BlinkCount=0;
-  static u8 u8Counter = 0;
+  static bool bRedBlink = FALSE;
+  static u8 u8BlinkRateIndex = 0;
+  static LedRateType LEDBlinkRate[] = {LED_1HZ, LED_2HZ, LED_4HZ, LED_8HZ};
 
-  u16BlinkCount++;
-  if(u16BlinkCount == 1000)
+  
+  if( IsButtonPressed(BUTTON1) )
   {
-    u16BlinkCount = 0;
-    
-    /* Update the counter and roll at 16 */
-    u8Counter++;
-    u8ColorIndex++;
-    
-    if(u8Counter & 0x01)
+  /* The button is currently pressed, so make sure the LED is on */
+    LedOn(PURPLE);
+  }
+  else
+  {
+  /* The button is not pressed, so make sure the LED is off */
+    LedOff(PURPLE);
+  }
+  if(IsButtonPressed(BUTTON2))
+  /* The button is currently pressed, so make sure the LED is on */
+  {
+    LedOn(BLUE);
+  }
+  else
+  {
+  /* The button is not pressed, so make sure the LED is off */
+    LedOff(BLUE);
+  }
+  
+  if( WasButtonPressed(BUTTON0) )
+  {
+    /* Be sure to acknowledge the button press */
+    ButtonAcknowledge(BUTTON0);
+
+    /* If the LED is already blinking, toggle it off */
+    if(bRedBlink)
     {
-      LedOn(RED); 
-    }
-    else
-    {
+      bRedBlink = FALSE;
       LedOff(RED);
     }
-    if(u8ColorIndex == 1)
-    {
-      
-      LedOn(CYAN);
-      LedOn(LCD_GREEN);
-      LedOn(LCD_BLUE);
-      LedOff(LCD_RED);
-    }
     else
     {
-     
-      LedOff(CYAN);
-     
+     /* start blinking the LED at the current rate */
+      bRedBlink = TRUE;
+      LedBlink(RED, LEDBlinkRate[u8BlinkRateIndex]);
     }
-    if(u8Counter & 0x02)
-    {
-      LedOn(ORANGE);
-    }
-    else
-    {
-      LedOff(ORANGE);
-    }
+    
+  }
 
-    if(u8ColorIndex == 2)
-    {
+  if(WasButtonPressed(BUTTON3))
+  {
+  /* Be sure to acknowledge the button press */
+    ButtonAcknowledge(BUTTON3);
       
-      LedOn(BLUE);
-      LedOn(LCD_BLUE);
-      LedOff(LCD_RED);
-      LedOff(LCD_GREEN);
-    }
-    else
+    if(bRedBlink)
     {
-     
-      LedOff(BLUE);
-     
-    }
-    if(u8Counter & 0x04)
-    {
-      LedOn(YELLOW);
-    }
-    else
-    {
-      LedOff(YELLOW);
-    }
-
-    if(u8ColorIndex == 3)
-    {
-     
-      LedOn(PURPLE);
-      LedOn(LCD_RED);
-      LedOn(LCD_BLUE);
-      LedOff(LCD_GREEN);
-    }
-    else
-    {
-     
-      LedOff(PURPLE);
-     
-    }
-    if(u8Counter & 0x08)
-    {
-      LedOn(GREEN);
-    }
-    else
-    {
-      LedOff(GREEN);
-    }
-    if(u8ColorIndex == 4)
-    {
-      
-      LedOn(WHITE);
-      LedOn(LCD_RED);
-      LedOn(LCD_GREEN);
-      LedOn(LCD_BLUE);
-      LedOff(LCD_RED);
-    }
-    else
-    {
-     
-      LedOff(WHITE);
-      
-    }
-    if(u8Counter == 16)
-    {
-      u8Counter = 0;
-    }     
-    if(u8ColorIndex == 4)
-    {
-      u8ColorIndex = 0;
+      u8BlinkRateIndex++;
+      if(u8BlinkRateIndex==4)
+      {
+        u8BlinkRateIndex=0;
+      }
+      LedBlink(RED, LEDBlinkRate[u8BlinkRateIndex]);
     }
   }
+
+  
 } /* end UserAppSM_Idle() */
      
 
