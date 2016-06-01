@@ -147,6 +147,7 @@ static void UserAppSM_Idle(void)
     
     /* Update the counter and roll at 16 */
     u8Counter++;
+    u8ColorIndex++;
     
     if(u8Counter & 0x01)
     {
@@ -156,7 +157,7 @@ static void UserAppSM_Idle(void)
     {
       LedOff(RED);
     }
-    if(u8Counter == 1)
+    if(u8ColorIndex == 1)
     {
       
       LedOn(CYAN);
@@ -179,7 +180,7 @@ static void UserAppSM_Idle(void)
       LedOff(ORANGE);
     }
 
-    if(u8Counter == 2)
+    if(u8ColorIndex == 2)
     {
       
       LedOn(BLUE);
@@ -202,7 +203,7 @@ static void UserAppSM_Idle(void)
       LedOff(YELLOW);
     }
 
-    if(u8Counter == 3)
+    if(u8ColorIndex == 3)
     {
      
       LedOn(PURPLE);
@@ -224,7 +225,7 @@ static void UserAppSM_Idle(void)
     {
       LedOff(GREEN);
     }
-    if(u8Counter == 4)
+    if(u8ColorIndex == 4)
     {
       
       LedOn(WHITE);
@@ -239,15 +240,13 @@ static void UserAppSM_Idle(void)
       LedOff(WHITE);
       
     }
-    if(u8Counter == 4)
+    if(u8Counter == 16)
     {
       u8Counter = 0;
-      
-      u8ColorIndex++;
-      if(u8ColorIndex == 7)
-      {
-        u8ColorIndex = 0;
-      }
+    }     
+    if(u8ColorIndex == 4)
+    {
+      u8ColorIndex = 0;
     }
   }
 } /* end UserAppSM_Idle() */
