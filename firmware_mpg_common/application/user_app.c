@@ -87,8 +87,7 @@ Promises:
   - 
 */
 void UserAppInitialize(void)
-{
-  
+{  
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -137,7 +136,120 @@ State Machine Function Definitions
 /* Wait for a message to be queued */
 static void UserAppSM_Idle(void)
 {
+  static u8 u8ColorIndex = 0;
+  static u16 u16BlinkCount=0;
+  static u8 u8Counter = 0;
+
+  u16BlinkCount++;
+  if(u16BlinkCount == 1000)
+  {
+    u16BlinkCount = 0;
     
+    /* Update the counter and roll at 16 */
+    u8Counter++;
+    
+    if(u8Counter & 0x01)
+    {
+      LedOn(RED); 
+    }
+    else
+    {
+      LedOff(RED);
+    }
+    if(u8Counter == 1)
+    {
+      
+      LedOn(CYAN);
+      LedOn(LCD_GREEN);
+      LedOn(LCD_BLUE);
+      LedOff(LCD_RED);
+    }
+    else
+    {
+     
+      LedOff(CYAN);
+     
+    }
+    if(u8Counter & 0x02)
+    {
+      LedOn(ORANGE);
+    }
+    else
+    {
+      LedOff(ORANGE);
+    }
+
+    if(u8Counter == 2)
+    {
+      
+      LedOn(BLUE);
+      LedOn(LCD_BLUE);
+      LedOff(LCD_RED);
+      LedOff(LCD_GREEN);
+    }
+    else
+    {
+     
+      LedOff(BLUE);
+     
+    }
+    if(u8Counter & 0x04)
+    {
+      LedOn(YELLOW);
+    }
+    else
+    {
+      LedOff(YELLOW);
+    }
+
+    if(u8Counter == 3)
+    {
+     
+      LedOn(PURPLE);
+      LedOn(LCD_RED);
+      LedOn(LCD_BLUE);
+      LedOff(LCD_GREEN);
+    }
+    else
+    {
+     
+      LedOff(PURPLE);
+     
+    }
+    if(u8Counter & 0x08)
+    {
+      LedOn(GREEN);
+    }
+    else
+    {
+      LedOff(GREEN);
+    }
+    if(u8Counter == 4)
+    {
+      
+      LedOn(WHITE);
+      LedOn(LCD_RED);
+      LedOn(LCD_GREEN);
+      LedOn(LCD_BLUE);
+      LedOff(LCD_RED);
+    }
+    else
+    {
+     
+      LedOff(WHITE);
+      
+    }
+    if(u8Counter == 4)
+    {
+      u8Counter = 0;
+      
+      u8ColorIndex++;
+      if(u8ColorIndex == 7)
+      {
+        u8ColorIndex = 0;
+      }
+    }
+  }
 } /* end UserAppSM_Idle() */
      
 
