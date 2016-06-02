@@ -88,8 +88,10 @@ Promises:
 */
 void UserAppInitialize(void)
 {
-  
-  /* If good initialization, set state to Idle */
+   PWMAudioSetFrequency(BUZZER1, 500);
+   
+
+     /* If good initialization, set state to Idle */
   if( 1 )
   {
     UserApp_StateMachine = UserAppSM_Idle;
@@ -137,7 +139,32 @@ State Machine Function Definitions
 /* Wait for a message to be queued */
 static void UserAppSM_Idle(void)
 {
+  static u16 delaytimecounter=0;
+  static u8 u8buzzerrateIndex=0;
+  /*Create a array ,so can store the song sounds different frequency*/
+  static u16 u16buzzerrate[]={330,294,262,294,330,330,330,0,
+                              294,294,294,0,
+                              330,392,392,0,
+                              330,294,262,294,330,330,330,0,
+                              330,294,294,330,294,262,0};
+  
+  delaytimecounter++;
+ /*delay alittle time*/
+  if(delaytimecounter==200)
+  {
+    delaytimecounter=0;
     
+    /*use a counter to let buffer1 knows which record to call, make buffer1 according to the frequence of array to work.*/
+    u8buzzerrateIndex++;
+    PWMAudioSetFrequency(BUZZER1,u16buzzerrate[u8buzzerrateIndex]);
+    PWMAudioOn(BUZZER1);
+
+    
+    if(u8buzzerrateIndex==31)
+    {
+      u8buzzerrateIndex=0;
+    } 
+  }
 } /* end UserAppSM_Idle() */
      
 
