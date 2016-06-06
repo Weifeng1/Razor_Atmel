@@ -159,7 +159,6 @@ static void UserAppSM_Idle(void)
   static u8 au8TestMessage[] = {0, 0, 0, 0, 0xA5, 0, 0, 0};
   u8 au8DataContent[] = "xxxxxxxxxxxxxxxx";
   static u8 pu8AsciiString[20];
-  static u8 u8CurrentDate0[20];
   
   /*chack if any new ANT information is in the ANT buffer*/
   if( AntReadData() )
@@ -168,15 +167,17 @@ static void UserAppSM_Idle(void)
     if(G_eAntApiCurrentMessageClass == ANT_DATA)
     {
       /* We got some data! */
+      /*Print the message time stamp on the LCD when the new message was received.*/
       NumberToAscii(G_u32AntApiCurrentDataTimeStamp,pu8AsciiString);
       LCDClearChars(LINE1_START_ADDR,20);
-      LCDMessage(LINE1_START_ADDR, pu8AsciiString);
+      LCDMessage(LINE1_START_ADDR, pu8AsciiString); 
       /* parse currentData into au8DataContent */
      for(u8 i = 0; i < ANT_DATA_BYTES; i++)
      {
        au8DataContent[2 * i]     = HexToASCIICharUpper(G_au8AntApiCurrentData[i] / 16);
        au8DataContent[2 * i + 1] = HexToASCIICharUpper(G_au8AntApiCurrentData[i] % 16);
      }
+     /*If 0xFF is sent in the Led'sposition,turn on one of the 8 LEDS.*/
       for(u8 j=0;j<ANT_DATA_BYTES;j++)
       {
         if(au8DataContent[2*j]=='F'&& au8DataContent[2*j+1]=='F')
